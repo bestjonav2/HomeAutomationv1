@@ -8,6 +8,7 @@ package frames;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -147,56 +148,70 @@ public class newAccFrame extends javax.swing.JFrame {
         File archivo = new File(ruta);
         BufferedWriter bw = null;
         BufferedReader br = null;
+        boolean err = false;
         String aux;
         if (name.equals("") || email.equals("") || pass.equals("") || phone.equals("")) {
             JOptionPane.showMessageDialog(this, "Error: All fields are required", "ERROR", JOptionPane.ERROR_MESSAGE);
+            err = true;
         } else {
             if (phone.length() != 13) {
                 JOptionPane.showMessageDialog(this, "The number phone isn't valid. The longitude need to be of 13 digits.", "ERROR", JOptionPane.ERROR_MESSAGE);
+                err = true;
                 try {
                     long ph = Long.parseLong(phone);
 
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(this, "Error: Only numbers can be entered", "ERROR", JOptionPane.ERROR_MESSAGE);
+                    err = true;
                     regPhoneET.setText("");
                 }
             } else {
-                //System.out.println(pass); //test
-                if (archivo.exists()) {
-                    try {
-                        bw = new BufferedWriter(new FileWriter(archivo, true));
-                        br = new BufferedReader(new FileReader(archivo));
-                        aux = br.readLine();
-                        while (aux != null) {
-                            if (aux.contains(email)) {
-                                JOptionPane.showMessageDialog(this, "Error: The email is already registered.", "ERROR", JOptionPane.ERROR_MESSAGE);
-                            } else {
-                                bw.write(name + "," + email + "," + pass + "," + phone);
-                                System.out.println("Titler");
-                            }
+                //validar email unico
+                try {
+                    bw = new BufferedWriter(new FileWriter(archivo, true));
+                    br = new BufferedReader(new FileReader(archivo));
+                    while ((aux = br.readLine()) != null) {
+                        if (aux.contains(email)) {
+                            JOptionPane.showMessageDialog(this, "Error: The email is already registered.", "ERROR", JOptionPane.ERROR_MESSAGE);
+                            err = true;
+                            regEmailET.setText("");
+                            break;
                         }
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(newAccFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                //----- validar archivo
+                if (archivo.exists() && !err) {
+                    try {                        
+                        bw.write(name + "," + email + "," + pass + "," + phone + "\n");
+                        //System.out.println("Titler"); //test
                         bw.close();
                     } catch (IOException ex) {
                         Logger.getLogger(newAccFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else {
+                    JOptionPane.showMessageDialog(this, "Account created successfully \n", ruta, WIDTH);
+                    this.dispose();
+                    regNameET.setText("");
+                    regEmailET.setText("");
+                    regPassET.setText("");
+                    regPhoneET.setText("");
+                } else if (!archivo.exists() && !err) {
                     try {
-                        bw = new BufferedWriter(new FileWriter(archivo));
-                        bw.write("Acabo de crear el fichero de texto. \n");
+                        bw.write(name + "," + email + "," + pass + "," + phone + "\n");
                         bw.close();
                     } catch (Exception e) {
                         Logger.getLogger(newAccFrame.class.getName()).log(Level.SEVERE, null, e);
                     }
+                    JOptionPane.showMessageDialog(this, "Account created successfully \n", ruta, WIDTH);
+                    this.dispose();
+                    regNameET.setText("");
+                    regEmailET.setText("");
+                    regPassET.setText("");
+                    regPhoneET.setText("");
                 }
-                regNameET.setText("");
-                regEmailET.setText("");
-                regPassET.setText("");
-                regPhoneET.setText("");
-                JOptionPane.showMessageDialog(this, "Account created successfully \n", ruta, WIDTH);
-                this.dispose();
                 //loginFrame lg = new loginFrame();
                 //lg.setVisible(true);
-
             }
 
         }
