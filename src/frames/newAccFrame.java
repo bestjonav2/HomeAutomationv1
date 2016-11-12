@@ -171,7 +171,8 @@ public class newAccFrame extends javax.swing.JFrame {
                     bw = new BufferedWriter(new FileWriter(archivo, true));
                     br = new BufferedReader(new FileReader(archivo));
                     while ((aux = br.readLine()) != null) {
-                        if (aux.contains(email)) {
+                        String em = aux.substring(aux.indexOf("email:"), aux.indexOf("pass"));
+                        if (("email:"+email+" ").equals(em)) {
                             JOptionPane.showMessageDialog(this, "Error: The email is already registered.", "ERROR", JOptionPane.ERROR_MESSAGE);
                             err = true;
                             regEmailET.setText("");
@@ -184,7 +185,7 @@ public class newAccFrame extends javax.swing.JFrame {
                 //----- validar archivo
                 if (archivo.exists() && !err) {
                     try {                        
-                        bw.write(name + "," + email + "," + pass + "," + phone + "\n");
+                        bw.write("name:"+name + " email:" + email + " pass:" + pass + " phone:" + phone + "\n");
                         //System.out.println("Titler"); //test
                         bw.close();
                     } catch (IOException ex) {
@@ -198,7 +199,7 @@ public class newAccFrame extends javax.swing.JFrame {
                     regPhoneET.setText("");
                 } else if (!archivo.exists() && !err) {
                     try {
-                        bw.write(name + "," + email + "," + pass + "," + phone + "\n");
+                        bw.write("name:"+name + " email:" + email + " pass:" + pass + " phone:" + phone + "\n");
                         bw.close();
                     } catch (Exception e) {
                         Logger.getLogger(newAccFrame.class.getName()).log(Level.SEVERE, null, e);

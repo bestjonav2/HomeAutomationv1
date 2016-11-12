@@ -8,7 +8,11 @@ package frames;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.font.TextAttribute;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.Map;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -35,11 +39,10 @@ public class loginFrame extends javax.swing.JFrame {
 
         exitButton = new javax.swing.JButton();
         loginIconLabel = new javax.swing.JLabel();
-        userLabel = new javax.swing.JLabel();
+        emailLabel = new javax.swing.JLabel();
         passwordLabel = new javax.swing.JLabel();
-        userField = new javax.swing.JTextField();
+        emailField = new javax.swing.JTextField();
         passwordField = new javax.swing.JPasswordField();
-        errorLabel = new javax.swing.JLabel();
         loginButton = new javax.swing.JButton();
         newAccountLabel = new javax.swing.JLabel();
         backgroundLabel = new javax.swing.JLabel();
@@ -63,26 +66,25 @@ public class loginFrame extends javax.swing.JFrame {
         loginIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/src/login_1.png"))); // NOI18N
         getContentPane().add(loginIconLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 70, 320, 300));
 
-        userLabel.setFont(new java.awt.Font("Noto Sans", 1, 18)); // NOI18N
-        userLabel.setText("Email:");
-        getContentPane().add(userLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 390, -1, -1));
+        emailLabel.setFont(new java.awt.Font("Noto Sans", 1, 18)); // NOI18N
+        emailLabel.setText("Email:");
+        getContentPane().add(emailLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 390, -1, -1));
 
         passwordLabel.setFont(new java.awt.Font("Noto Sans", 1, 18)); // NOI18N
         passwordLabel.setText("Password:");
         getContentPane().add(passwordLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 460, -1, -1));
 
-        userField.setBackground(new java.awt.Color(0, 92, 234));
-        userField.setFont(new java.awt.Font("Noto Sans", 0, 14)); // NOI18N
-        userField.setForeground(new java.awt.Color(254, 254, 254));
-        userField.setMaximumSize(new java.awt.Dimension(6, 26));
-        getContentPane().add(userField, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 420, 260, -1));
+        emailField.setBackground(new java.awt.Color(0, 92, 234));
+        emailField.setFont(new java.awt.Font("Noto Sans", 0, 14)); // NOI18N
+        emailField.setForeground(new java.awt.Color(254, 254, 254));
+        emailField.setMaximumSize(new java.awt.Dimension(6, 26));
+        getContentPane().add(emailField, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 420, 260, -1));
 
         passwordField.setBackground(new java.awt.Color(0, 92, 234));
         passwordField.setFont(new java.awt.Font("Noto Sans", 0, 14)); // NOI18N
         passwordField.setForeground(new java.awt.Color(254, 254, 254));
         passwordField.setMaximumSize(new java.awt.Dimension(6, 26));
         getContentPane().add(passwordField, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 490, 260, 30));
-        getContentPane().add(errorLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 570, 350, 20));
 
         loginButton.setBackground(java.awt.Color.blue);
         loginButton.setFont(new java.awt.Font("Noto Sans", 1, 14)); // NOI18N
@@ -127,6 +129,23 @@ public class loginFrame extends javax.swing.JFrame {
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
         // TODO add your handling code here:
+        String email = "email:"+emailField.getText()+" ";
+        String pass = "pass:"+passwordField.getText()+" ";
+        File file = new File("./Data/users.txt");
+        BufferedReader br;
+        String line;
+        try {
+            br = new BufferedReader(new FileReader(file));
+            while ((line = br.readLine()) != null) {
+                String em = line.substring(line.indexOf("email:"), line.indexOf("pass"));
+                String ps = line.substring(line.indexOf("pass:"), line.indexOf("phone:"));
+                if (email.equals(em) && pass.equals(ps)) {
+                    JOptionPane.showMessageDialog(this, "Sucessful login.", "Sucessful login.", JOptionPane.INFORMATION_MESSAGE);
+                    //open the main frame and close tis
+                }
+            }
+        } catch (Exception e) {
+        }
     }//GEN-LAST:event_loginButtonActionPerformed
 
     private void newAccountLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newAccountLabelMouseEntered
@@ -190,14 +209,13 @@ public class loginFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel backgroundLabel;
-    private javax.swing.JLabel errorLabel;
+    private javax.swing.JTextField emailField;
+    private javax.swing.JLabel emailLabel;
     private javax.swing.JButton exitButton;
     private javax.swing.JButton loginButton;
     private javax.swing.JLabel loginIconLabel;
     private javax.swing.JLabel newAccountLabel;
     private javax.swing.JPasswordField passwordField;
     private javax.swing.JLabel passwordLabel;
-    private javax.swing.JTextField userField;
-    private javax.swing.JLabel userLabel;
     // End of variables declaration//GEN-END:variables
 }
