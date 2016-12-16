@@ -9,9 +9,15 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.font.TextAttribute;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -20,12 +26,27 @@ import javax.swing.JOptionPane;
  */
 public class loginFrame extends javax.swing.JFrame {
 
+    private String emailUsed;
+
     /**
      * Creates new form loginFrame
      */
     public loginFrame() {
         initComponents();
         this.setLocationRelativeTo(null);
+    }
+
+    public String getEmailUsed() {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("./Data/emailUsed.txt"));
+            emailUsed = br.readLine();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(loginFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(loginFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return emailUsed;
     }
 
     /**
@@ -133,26 +154,31 @@ public class loginFrame extends javax.swing.JFrame {
         String pass = "pass:" + passwordField.getText() + " ";
         File file = new File("./Data/users.txt");
         BufferedReader br;
+        BufferedWriter bw;
         String line;
         String em = "";
         String ps = "";
-        
+        String id = "";
         try {
             br = new BufferedReader(new FileReader(file));
             while ((line = br.readLine()) != null) {
                 em = line.substring(line.indexOf("email:"), line.indexOf("pass"));
                 ps = line.substring(line.indexOf("pass:"), line.indexOf("phone:"));
+                System.out.println("Em: " + em + " ps: " + ps);
                 if (email.equals(em) && pass.equals(ps)) {
                     JOptionPane.showMessageDialog(this, "Sucessful login.", "Sucessful login.", JOptionPane.INFORMATION_MESSAGE);
                     //open the main frame and close tis
                     Main2Frame main = new Main2Frame();
                     main.setVisible(true);
                     this.dispose();
+                    emailUsed = em;
+                    bw = new BufferedWriter(new FileWriter("./Data/emailUsed.txt"));
+                    bw.write(emailUsed);
+                    bw.close();
                     //
                     break;
-                } else {
+                } else if((id = br.readLine()) == null){
                     JOptionPane.showMessageDialog(this, "Error: The email/password doesn't match.", "ERROR", JOptionPane.INFORMATION_MESSAGE);
-                    break;
                 }
             }
 

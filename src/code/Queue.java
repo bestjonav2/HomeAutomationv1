@@ -1,4 +1,4 @@
-package queues;
+package code;
 
 
 public class Queue {
