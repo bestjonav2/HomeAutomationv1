@@ -54,7 +54,7 @@ public class loginFrame extends javax.swing.JFrame {
         exitButton.setBackground(java.awt.Color.blue);
         exitButton.setFont(new java.awt.Font("Noto Sans", 1, 14)); // NOI18N
         exitButton.setForeground(java.awt.Color.white);
-        exitButton.setText("Salir");
+        exitButton.setText("Exit");
         exitButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 exitButtonActionPerformed(evt);
@@ -129,22 +129,35 @@ public class loginFrame extends javax.swing.JFrame {
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
         // TODO add your handling code here:
-        String email = "email:"+emailField.getText()+" ";
-        String pass = "pass:"+passwordField.getText()+" ";
+        String email = "email:" + emailField.getText() + " ";
+        String pass = "pass:" + passwordField.getText() + " ";
         File file = new File("./Data/users.txt");
         BufferedReader br;
         String line;
+        String em = "";
+        String ps = "";
+        
         try {
             br = new BufferedReader(new FileReader(file));
             while ((line = br.readLine()) != null) {
-                String em = line.substring(line.indexOf("email:"), line.indexOf("pass"));
-                String ps = line.substring(line.indexOf("pass:"), line.indexOf("phone:"));
+                em = line.substring(line.indexOf("email:"), line.indexOf("pass"));
+                ps = line.substring(line.indexOf("pass:"), line.indexOf("phone:"));
                 if (email.equals(em) && pass.equals(ps)) {
                     JOptionPane.showMessageDialog(this, "Sucessful login.", "Sucessful login.", JOptionPane.INFORMATION_MESSAGE);
                     //open the main frame and close tis
+                    Main2Frame main = new Main2Frame();
+                    main.setVisible(true);
+                    this.dispose();
+                    //
+                    break;
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error: The email/password doesn't match.", "ERROR", JOptionPane.INFORMATION_MESSAGE);
+                    break;
                 }
             }
+
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: The email/password doesn't match.", "ERROR", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_loginButtonActionPerformed
 
