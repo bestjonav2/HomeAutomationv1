@@ -23,7 +23,6 @@ import org.jfree.data.xy.XYSeriesCollection;
 import code.Node;
 import code.Queue;
 import java.awt.HeadlessException;
-//import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 import javax.mail.Message;
